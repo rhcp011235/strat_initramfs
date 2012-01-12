@@ -660,6 +660,54 @@ on boot
 # GOTA
     chmod 0777 /system/etc/install-recovery.sh
 
+	write /proc/sys/vm/overcommit_memory 0
+	write /proc/sys/vm/vfs_cache_pressure 200
+	write /proc/sys/vm/swappiness 25
+
+	# SDCard Speed Tweak
+	write /sys/block/mmcblk0/bdi/read_ahead_kb 4096
+
+# Permissions for System Server and daemons.
+	chown radio system /sys/android_power/state
+	chown radio system /sys/android_power/request_state
+	chown radio system /sys/android_power/acquire_full_wake_lock
+	chown radio system /sys/android_power/acquire_partial_wake_lock
+	chown radio system /sys/android_power/release_wake_lock
+	chown radio system /sys/power/state
+	chown radio system /sys/power/wake_lock
+	chown radio system /sys/power/wake_unlock
+	chown radio system /sys/power/dvfslock_ctrl
+	chmod 0660 /sys/power/state
+	chmod 0660 /sys/power/wake_lock
+	chmod 0660 /sys/power/wake_unlock
+	chmod 0660 /sys/power/dvfslock_ctrl
+	chown system system /sys/class/timed_output/vibrator/enable
+	chown system system /sys/class/leds/keyboard-backlight/brightness
+	chown system system /sys/class/leds/lcd-backlight/brightness
+	chown system system /sys/class/leds/button-backlight/brightness
+	chown system system /sys/class/leds/jogball-backlight/brightness
+	chown system system /sys/class/leds/red/brightness
+	chown system system /sys/class/leds/green/brightness
+	chown system system /sys/class/leds/blue/brightness
+	chown system system /sys/class/leds/red/device/grpfreq
+	chown system system /sys/class/leds/red/device/grppwm
+	chown system system /sys/class/leds/red/device/blink
+	chown system system /sys/class/leds/red/brightness
+	chown system system /sys/class/leds/green/brightness
+	chown system system /sys/class/leds/blue/brightness
+	chown system system /sys/class/leds/red/device/grpfreq
+	chown system system /sys/class/leds/red/device/grppwm
+	chown system system /sys/class/leds/red/device/blink
+	chown system system /sys/class/timed_output/vibrator/enable
+	chown system system /sys/module/sco/parameters/disable_esco
+	chown system system /sys/kernel/ipv4/tcp_wmem_min
+	chown system system /sys/kernel/ipv4/tcp_wmem_def
+	chown system system /sys/kernel/ipv4/tcp_wmem_max
+	chown system system /sys/kernel/ipv4/tcp_rmem_min
+	chown system system /sys/kernel/ipv4/tcp_rmem_def
+	chown system system /sys/kernel/ipv4/tcp_rmem_max
+	chown root radio /proc/cmdline
+
 # Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
 #    setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
@@ -700,6 +748,10 @@ on property:persist.service.usb.setting=2
 	write /sys/devices/platform/android_usb/UsbMenuSel 2
 on property:persist.service.usb.setting=3
 	write /sys/devices/platform/android_usb/UsbMenuSel 3
+
+# init.d support for Voltage Control
+service run_parts /system/xbin/run-parts /system/etc/init.d
+	oneshot
 
 # adbd is controlled by the persist.service.adb.enable system property
 service adbd /sbin/adbd
