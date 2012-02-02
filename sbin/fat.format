@@ -1,0 +1,19 @@
+#!/sbin/sh
+# The Charge CWM has issues with /cache, so this script was created to hijack the call and change the appropriate
+# arguments
+
+echo Device: $7 >> /fat.format.log
+echo $* >> /fat.format.log
+
+if [ "$7" == "/dev/block/mmcblk0p3" ]; then
+	echo Cache partition found. Sending substitute call.  >> /fat.format.log
+	/sbin/fat.formater -F 16 -s 32 -S 512 /dev/block/mmcblk0p3
+else
+	echo Regular partition found. Passing arguments as-is.  >> /fat.format.log
+	/sbin/fat.formater $*
+fi
+
+
+echo ------------------------------------------------------------------ >> /fat.format.log
+
+exit $?
