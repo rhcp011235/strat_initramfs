@@ -820,7 +820,7 @@ service playsound /system/bin/playsound
     disabled
     oneshot
 
-service samsungani /system/bin/samsungani
+service samsungani /sbin/bootanimation.sh
     user graphics
     group graphics
     disabled
@@ -956,4 +956,7 @@ on property:encryption.bootmode=remount
     start wpa_supplicant
     start immvibed
     start media
-    start tvout 
+    start tvout
+ 
+on property:sys.boot_completed=1
+	stop samsungani
